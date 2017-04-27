@@ -53,7 +53,7 @@
 			regulator-always-on;
 		};
 
-		wlan_en_reg: regulator@3 {
+		wlan_en_reg: regulator@2 {
 			compatible = "regulator-fixed";
 			reg = <2>;
 			regulator-name = "wlan-en-regulator";
@@ -66,6 +66,17 @@
 			startup-delay-us = <70000>;
 			enable-active-high;
 		};
+
+		reg_usb_otg_vbus: regulator@3 {
+			compatible = "regulator-fixed";
+			reg = <3>;
+			regulator-name = "usb_otg_vbus";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			gpio = <&gpio3 22 0>;
+			enable-active-high;
+			vin-supply = <&swbst_reg>;
+			};
 	};
 
 	gpio-keys {
@@ -537,12 +548,6 @@
 			>;
 		};
 
-		pinctrl_pcie: pciegrp {
-			fsl,pins = <
-				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x1b0b0
-			>;
-		};
-
 		pinctrl_pwm1: pwm1grp {
 			fsl,pins = <
 				MX6QDL_PAD_GPIO_9__PWM1_OUT	    0x1b0b1
@@ -688,21 +693,9 @@
 	lanes = <2>;
 };
 
-
-&pcie {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_pcie>;
-	reset-gpio = <&gpio7 12 0>;
-	status = "okay";
-};
-
 &pwm1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pwm1>;
-	status = "okay";
-};
-
-&snvs_poweroff {
 	status = "okay";
 };
 
@@ -731,6 +724,18 @@
 	fsl,uart-has-rtscts;
 	status = "okay";
 };
+
+&usbotg {
+	vbus-supply = <&reg_usb_otg_vbus>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usbotg>;
+	disable-over-current;
+	srp-disable;
+	hnp-disable;
+	adp-disable;
+	status = "okay";
+};
+
 
 &usbh1 {
 	status = "okay";
