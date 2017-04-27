@@ -409,6 +409,12 @@
 		reg = <0x50>;
 	};
 
+	ar1021@4d {
+		compatible = "microchip,ar1021-i2c";
+		reg = <0x4d>;
+		interrupt-parent = <&gpio6>;
+		interrupts = <8 0x2>;
+	};
 };
 
 &i2c3 {
@@ -433,6 +439,9 @@
 				MX6QDL_PAD_SD3_RST__GPIO7_IO08	0x80000000  /*headphone det*/
 				MX6QDL_PAD_GPIO_2__GPIO1_IO02    0x80000000 /*SD3 CD pin*/
 				MX6QDL_PAD_KEY_COL2__GPIO4_IO10	0x80000000 /*codec power*/
+				MX6QDL_PAD_EIM_A16__GPIO2_IO22	0x80000000 /*touch reset*/
+				MX6QDL_PAD_NANDF_ALE__GPIO6_IO08	0x1b0b0 /*touch irq*/
+				MX6QDL_PAD_GPIO_7__GPIO1_IO07	0x80000000 /*backlight pwr*/
 			>;
 		};
 
