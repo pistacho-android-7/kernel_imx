@@ -45,6 +45,7 @@ struct edid_output {
 	u32 v_front;
 	u32 h_len;
 	u32 v_len;
+	u8  edid_flag;
 };
 
 #define DISPDRV_LCD	"lcd"
@@ -91,7 +92,8 @@ static int lcdif_init(struct mxc_dispdrv_handle *disp,
 	struct fb_videomode *modedb = lcdif_modedb;
 	int modedb_sz = lcdif_modedb_sz;
 
-	if(current_panel.xres <= 1920 && current_panel.yres <= 1080) {
+	if((current_panel.xres <= 1920 && current_panel.yres <= 1080) ||
+			current_panel.edid_flag == 1) {
 		lcdif_modedb[0].xres = current_panel.xres;
 		lcdif_modedb[0].yres = current_panel.yres;
 		lcdif_modedb[0].pixclock = 1000000000/(current_panel.pclk*10);
@@ -269,6 +271,13 @@ int edid_i2c_probe(struct i2c_client *i2c_dev,const struct i2c_device_id *id)
 		get_edid[i-0x36] = i2c_smbus_read_byte_data(i2c_dev,i);
 
 	mutex_unlock(&edid_lock);
+
+	if(get_edid[0] == get_edid[1] == get_edid[2] == get_edid[3] == get_edid[4]
+			== get_edid[5] == get_edid[6] == get_edid[7] == get_edid[8] == get_edid[9]
+			== get_edid[10] == get_edid[11])
+		current_panel.edid_flag = 0;
+	else
+		current_panel.edid_flag = 1;
 
 	current_panel.pclk = 0x0000 | (get_edid[1] << 8) | get_edid[0];
 	current_panel.xres = 0x000 | ((get_edid[4] >> 4) << 8) | get_edid[2];
