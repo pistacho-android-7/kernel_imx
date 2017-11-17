@@ -206,7 +206,7 @@
 		compatible = "fsl,mxc_sdc_fb";
 		disp_dev = "lcd";
 		interface_pix_fmt = "RGB565";
-		mode_str ="CLAA-WVGA";
+		mode_str ="EDID-AUTO";
 		default_bpp = <16>;
 		int_clk = <0>;
 		late_init = <0>;
